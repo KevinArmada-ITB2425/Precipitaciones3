@@ -3,7 +3,7 @@
 # Directorio
 import os
 
-directory = '/home/kevin.armada.7e4/PycharmProjects/Precipitaciones3/dat'
+directory = '/home/kevin.armada.7e4/PycharmProjects/Precipitaciones3/dat2'
 
 
 # verificar el formato del archivo
@@ -53,7 +53,7 @@ import os
 import pandas as pd
 
 # Directorio de la carpeta con los archivos
-directory = '/home/kevin.armada.7e4/PycharmProjects/Precipitaciones3/dat'
+directory = '/home/kevin.armada.7e4/PycharmProjects/Precipitaciones3/dat2'
 
 # Información esperada
 expected_fields = [
@@ -130,88 +130,120 @@ if not file_details:
     print("No se encontraron archivos con el formato esperado.")
 
 ############################EJERCICIO2 PASO 3########################################
+import os
 import pandas as pd
-print("------------------------------------------------------------------------")
-# Ruta del archivo .dat
-file_path = '/home/kevin.armada.7e4/PycharmProjects/Precipitaciones3/dat/precip.P1.MIROC5.RCP60.2006-2100.REGRESION.dat'
 
 
-# Función para detectar errores en los datos
-def detect_errors(filepath):
+def read_and_clean_single_file(file_path, delimiter=" "):
+    """
+    Llegeix i neteja un fitxer .dat específic, assegurant-se que la primera lletra de cada línia
+    sigui una lletra i que després només contingui números, espais o el valor especial -999.
+
+    Args:
+        file_path (str): Ruta completa del fitxer .dat.
+        delimiter (str): Delimitador utilitzat en el fitxer .dat (espai, tabulació, etc.).
+
+    Returns:
+        tuple: DataFrame netejat i una llista amb els errors trobats.
+    """
     try:
-        # Leer el archivo utilizando pandas, ignorando líneas con un número incorrecto de campos
-        df = pd.read_csv(filepath, sep='\s+', header=None, on_bad_lines='skip')
+        print(f"\nProcessant {file_path}...")
 
-        # Asumimos que el archivo tiene las siguientes columnas:
-        # Columna 0: Identificador
-        # Columna 1: Latitud
-        # Columna 2: Longitud
-        # Columna 3: Altitud
-        # Columna 4: Tipo de dato
-        # Columna 5: Año de inicio
-        # Columna 6: Año de fin
-        # Columna 7: Código para "sin datos"
+        # Llegir el fitxer manualment per línia per tenir més control sobre el format
+        with open(file_path, "r") as file:
+            lines = file.readlines()
 
-        # Nombrar las columnas
-        df.columns = ['Identificador', 'Latitud', 'Longitud', 'Altitud', 'Tipo_de_dato', 'Año_de_inicio', 'Año_de_fin',
-                      'Codigo_sin_datos']
+        valid_rows = []
+        invalid_lines = []
 
-        # Inicializar el diccionario de errores
-        errors = {
-            'identificador': [],
-            'latitud': [],
-            'longitud': [],
-            'altitud': [],
-            'tipo_de_dato': [],
-            'año_de_inicio': [],
-            'año_de_fin': [],
-            'codigo_sin_datos': [],
-            'missing_values': [],
-        }
+        for i, line in enumerate(lines, start=1):
+            line = line.strip()
+            if not line:
+                continue  # Saltar línies buides
 
-        # Verificar la consistencia de las columnas
-        if not all(df['Identificador'].str.startswith('P')):
-            errors['identificador'].append("Identificadores no válidos")
+            # Separar els camps segons el delimitador
+            columns = line.split(delimiter)
 
-        if not pd.api.types.is_numeric_dtype(df['Latitud']) or (df['Latitud'] < -90).any() or (
-                df['Latitud'] > 90).any():
-            errors['latitud'].append("Latitudes fuera del rango -90 a 90")
+            # Verificar que la primera columna és una lletra
+            if not columns[0][0].isalpha():
+                invalid_lines.append((i, "Primera columna no és una lletra"))
+                continue
 
-        if not pd.api.types.is_numeric_dtype(df['Longitud']) or (df['Longitud'] < -180).any() or (
-                df['Longitud'] > 180).any():
-            errors['longitud'].append("Longitudes fuera del rango -180 a 180")
+            # Verificar que les altres columnes només contenen números, -999 o espais
+            for col_index, col in enumerate(columns[1:], start=2):  # Comença en 2 per ajustar a columna visible
+                if not (col.strip().isdigit() or col.strip() == "-999" or col.strip() == ""):
+                    invalid_lines.append((i, f"Columna {col_index}: '{col}' no vàlid"))
+                    break
+            else:
+                valid_rows.append(columns)
 
-        if not pd.api.types.is_numeric_dtype(df['Altitud']) or (df['Altitud'] < 0).any():
-            errors['altitud'].append("Altitudes negativas")
-
-        if not all(df['Tipo_de_dato'] == 'geo'):
-            errors['tipo_de_dato'].append("Tipos de dato no válidos")
-
-        if not all(df['Año_de_inicio'] == 2006):
-            errors['año_de_inicio'].append("Años de inicio diferentes de 2006")
-
-        if not all(df['Año_de_fin'] == 2100):
-            errors['año_de_fin'].append("Años de fin diferentes de 2100")
-
-        if not all(df['Codigo_sin_datos'] == -1):
-            errors['codigo_sin_datos'].append("Código para 'sin datos' diferente de -1")
-
-        # Verificar valores faltantes o corruptos
-        if df.isnull().values.any():
-            errors['missing_values'].append("Valores faltantes en el archivo")
-
-        # Imprimir errores encontrados
-        for key, value in errors.items():
-            if value:
-                print(f"Errores en {key}: {value}")
-
-        # Verificar si no hay errores
-        if all(not value for value in errors.values()):
-            print("No se encontraron errores en el archivo.")
+        # Crear DataFrame amb les línies vàlides
+        cleaned_data = pd.DataFrame(valid_rows)
+        return cleaned_data, invalid_lines
 
     except Exception as e:
-        print(f"Error al leer o verificar el archivo {filepath}: {e}")
+        print(f"Error al processar el fitxer: {e}")
+        return None, []
 
 
-# Detectar errores en el archivo especificado
-detect_errors(file_path)
+def process_all_files_in_folder(folder_path, delimiter=" "):
+    """
+    Processa tots els fitxers .dat dins d'una carpeta específica, netejant i reportant els errors trobats.
+
+    Args:
+        folder_path (str): Ruta de la carpeta amb els fitxers .dat.
+        delimiter (str): Delimitador utilitzat en els fitxers .dat.
+    """
+    if not os.path.isdir(folder_path):
+        print(f"La ruta {folder_path} no és vàlida.")
+        return
+
+    # Obtenir tots els fitxers .dat de la carpeta
+    files = [f for f in os.listdir(folder_path) if f.endswith(".dat")]
+
+    if not files:
+        print("No s'han trobat fitxers .dat a la carpeta.")
+        return
+
+    print(f"S'han trobat {len(files)} fitxers .dat a la carpeta '{folder_path}'.")
+
+    no_errors_count = 0
+    files_with_errors = {}
+
+    for file_name in files:
+        file_path = os.path.join(folder_path, file_name)
+        _, errors = read_and_clean_single_file(file_path, delimiter)
+
+        # Si hi ha errors, afegeix-los al resum
+        if errors:
+            files_with_errors[file_name] = errors
+        else:
+            no_errors_count += 1
+
+    # Mostrar resum final
+    print("\n--- Resum Final ---")
+    print(f"Fitxers sense errors: {no_errors_count}")
+    if files_with_errors:
+        print("\nFitxers amb errors:")
+        for file_name, errors in files_with_errors.items():
+            print(f"- {file_name}:")
+            for line_num, error in errors:
+                print(f"  * Línia {line_num}: {error}")
+    else:
+        print("\nTots els fitxers són vàlids!")
+
+
+# Exemple d'ús
+if __name__ == "__main__":
+    folder_path = "/home/kevin.armada.7e4/PycharmProjects/Precipitaciones3/dat2"  # Ruta de la carpeta
+    delimiter = " "  # Defineix el delimitador adequat
+    process_all_files_in_folder(folder_path, delimiter)
+
+
+
+
+
+
+
+
+
