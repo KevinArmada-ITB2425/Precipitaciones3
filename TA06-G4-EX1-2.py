@@ -3,7 +3,7 @@
 # Directorio
 import os
 
-directory = '/home/kevin.armada.7e4/PycharmProjects/Precipitaciones3/dat2'
+directory = '/home/kevin.armada.7e4/PycharmProjects/Precipitaciones3/dat'
 
 
 # verificar el formato del archivo
@@ -53,7 +53,7 @@ import os
 import pandas as pd
 
 # Directorio de la carpeta con los archivos
-directory = '/home/kevin.armada.7e4/PycharmProjects/Precipitaciones3/dat2'
+directory = '/home/kevin.armada.7e4/PycharmProjects/Precipitaciones3/dat'
 
 # Información esperada
 expected_fields = [
@@ -235,7 +235,7 @@ def process_all_files_in_folder(folder_path, delimiter=" "):
 
 # Exemple d'ús
 if __name__ == "__main__":
-    folder_path = "/home/kevin.armada.7e4/PycharmProjects/Precipitaciones3/dat2"  # Ruta de la carpeta
+    folder_path = "/home/kevin.armada.7e4/PycharmProjects/Precipitaciones3/dat"  # Ruta de la carpeta
     delimiter = " "  # Defineix el delimitador adequat
     process_all_files_in_folder(folder_path, delimiter)
 
