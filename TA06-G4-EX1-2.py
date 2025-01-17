@@ -239,6 +239,9 @@ if __name__ == "__main__":
     delimiter = " "  # Defineix el delimitador adequat
     process_all_files_in_folder(folder_path, delimiter)
 
+############################EJERCICIO2 PASO 4########################################
+
+
 
 
 
