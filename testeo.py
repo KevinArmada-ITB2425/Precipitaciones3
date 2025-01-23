@@ -98,11 +98,11 @@ def process_all_files_in_folder(folder_path, delimiter=" "):
 
     # Mostrar les estadístiques generals
     print("\n--- ESTADISTICAS GENERALES ---")
-    print(f"Total de valores procesados: {total_values}")
-    print(f"Valores Faltantes (-999): {total_negative_999_values}")
+    print(f"Total de valores procesados: {total_values:,}")
+    print(f"Valores Faltantes (-999): {total_negative_999_values:,}")
     print(f"Porcentaje de datos faltantes: {missing_percentage:.2f}%")
-    print(f"Achivos Pocesados: {len(files)}")
-    print(f"Lineas Procesadas: {total_lines_processed}")
+    print(f"Archivos Procesados: {len(files):,}")
+    print(f"Líneas Procesadas: {total_lines_processed:,}")
 
 
 # Exemple d'ús
