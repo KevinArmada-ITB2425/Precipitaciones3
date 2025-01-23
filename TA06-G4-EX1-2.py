@@ -3,7 +3,7 @@
 # Directorio
 import os
 
-directory = './dat'
+directory = './dat.proves'
 
 # verificar el formato del archivo
 def check_file_format(filepath):
@@ -147,8 +147,6 @@ def read_and_clean_single_file(file_path, delimiter=" "):
         tuple: DataFrame netejat i una llista amb els errors trobats.
     """
     try:
-        ###print(f"\nProcessant {file_path}...")
-
         # Llegir el fitxer manualment per línia per tenir més control sobre el format
         with open(file_path, "r") as file:
             lines = file.readlines()
@@ -175,6 +173,26 @@ def read_and_clean_single_file(file_path, delimiter=" "):
                     invalid_lines.append((i, f"Columna {col_index}: '{col}' no vàlid"))
                     break
             else:
+                # A partir de la tercera línia, comprovar si existeix un valor que comenci amb "P" i un any en format "2XXX"
+                if i >= 3:  # Comença a validar a partir de la tercera línia
+                    has_p_value = any(col.startswith('P') for col in columns)
+                    has_year = any(col.startswith('2') and len(col) == 4 and col.isdigit() for col in columns)
+                    has_month = False
+
+                    # Comprovar si hi ha un mes vàlid (1-12)
+                    for col in columns:
+                        if col.isdigit() and 1 <= int(col) <= 12:
+                            has_month = True
+                            break
+                        elif col == "0" or col.strip() == "":  # Comprovar si hi ha un 0 o una cadena buida
+                            invalid_lines.append((i, "Et falta el mes en aquesta línia! Ha de ser del 1 al 12."))
+                            break  # Només un cop per línia
+
+                    if not has_p_value:
+                        invalid_lines.append((i, "Línia ha de contenir un valor que comenci amb 'P'"))
+                    if not has_year:
+                        invalid_lines.append((i, "Hey chavalin, et falta l'any en aquesta línia!"))
+
                 valid_rows.append(columns)
 
         # Crear DataFrame amb les línies vàlides
@@ -229,13 +247,37 @@ def process_all_files_in_folder(folder_path, delimiter=" "):
             print(f"- {file_name}:")
             for line_num, error in errors:
                 print(f"  * Línia {line_num}: {error}")
+
+        # Crear CSV d'errors
+        create_error_csv(files_with_errors)
+
     else:
         print("\nTots els fitxers són vàlids!")
 
 
+def create_error_csv(files_with_errors):
+    """
+    Crea un fitxer CSV amb els errors trobats en els fitxers .dat.
+
+    Args:
+        files_with_errors (dict): Diccionari amb el nom del fitxer i els errors trobats.
+    """
+    error_list = []
+
+    for file_name, errors in files_with_errors.items():
+        for line_num, error in errors:
+            error_list.append({"File Name": file_name, "Line Number": line_num, "Error": error})
+
+    error_df = pd.DataFrame(error_list)
+
+    # Guardar el DataFrame com a CSV
+    error_df.to_csv("errors_report.csv", index=False)
+    print("\nS'ha creat 'errors_report.csv' amb els errors trobats.")
+
+
 # Exemple d'ús
 if __name__ == "__main__":
-    folder_path = "./dat"  # Ruta de la carpeta
+    folder_path = "./dat.proves"  # Ruta de la carpeta
     delimiter = " "  # Defineix el delimitador adequat
     process_all_files_in_folder(folder_path, delimiter)
 
@@ -348,7 +390,7 @@ def process_all_files_in_folder(folder_path, delimiter=" "):
 
 # Exemple d'ús
 if __name__ == "__main__":
-    folder_path = "./dat"  # Ruta de la carpeta
+    folder_path = "./dat.proves"  # Ruta de la carpeta
     delimiter = " "  # Defineix el delimitador adequat
     process_all_files_in_folder(folder_path, delimiter)
 
