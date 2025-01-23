@@ -3,7 +3,7 @@
 # Directorio
 import os
 
-directory = './dat.proves'
+directory = './dat'
 
 # verificar el formato del archivo
 def check_file_format(filepath):
@@ -235,7 +235,7 @@ def process_all_files_in_folder(folder_path, delimiter=" "):
 
 # Exemple d'ús
 if __name__ == "__main__":
-    folder_path = "./dat.proves"  # Ruta de la carpeta
+    folder_path = "./dat"  # Ruta de la carpeta
     delimiter = " "  # Defineix el delimitador adequat
     process_all_files_in_folder(folder_path, delimiter)
 
@@ -348,7 +348,7 @@ def process_all_files_in_folder(folder_path, delimiter=" "):
 
 # Exemple d'ús
 if __name__ == "__main__":
-    folder_path = "./dat.proves"  # Ruta de la carpeta
+    folder_path = "./dat"  # Ruta de la carpeta
     delimiter = " "  # Defineix el delimitador adequat
     process_all_files_in_folder(folder_path, delimiter)
 
