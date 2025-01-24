@@ -17,4 +17,5 @@ Ejemploo de archivo .dat con errores
 <img src="./Imagenes/Errores_dat.png" alt="Archivos totales" width="600">
 
 Archivo .dat sin errores
+
 <img src="./Imagenes/Ningun_error.png" alt="Archivos totales" width="600">
