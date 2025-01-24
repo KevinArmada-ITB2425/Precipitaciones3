@@ -19,3 +19,12 @@ Ejemploo de archivo .dat con errores
 Archivo .dat sin errores
 
 <img src="./Imagenes/Ningun_error.png" alt="Archivos totales" width="600">
+
+---------------------------------------------------------------------------------------
+
+# Calcular datos
+
+Ahora tenemos que procesar todos los .dat para sacar los siguientes valores: Valores procesados, Valores (-999), Porcentaje de datos faltantes, Archivos procesados y Lineas procesadas
+
+<img src="./Imagenes/Valores_totales.png" alt="Archivos totales" width="600">
+
