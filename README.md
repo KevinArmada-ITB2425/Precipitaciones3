@@ -4,3 +4,5 @@ Para organizar y procesar los datos, lo que hemos hecho en el codigo, primero ti
 <img src="./Imagenes/archivos_verificados.png" alt="Archivos totales" width="600">
 
 Y tambien como se muestra en la imagen los resultados se han guardado en un archivo csv llamado "file_validation_results"
+<img src="./Imagenes/Ejemplo_csv.png" alt="Archivos totales" width="600">
+
