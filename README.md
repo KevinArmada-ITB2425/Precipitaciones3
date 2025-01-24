@@ -9,6 +9,7 @@ Y tambien como se muestra en la imagen los resultados se han guardado en un arch
 
 Este seria un ejemplo de cada archivo que guarda las 2 primeras lineas en el csv
 ---------------------------------------------------------------------------------------
-#Limpiar Datos
+# Limpiar Datos
 
 Tenemos que verificar que los .dat no tengan ningun tipo de letra ya que solo los valores son numeros
+<img src="./Imagenes/Errores_dat.png" alt="Archivos totales" width="600">
