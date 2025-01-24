@@ -8,6 +8,7 @@ Y tambien como se muestra en la imagen los resultados se han guardado en un arch
 <img src="./Imagenes/Ejemplo_csv.png" alt="Archivos totales" width="600">
 
 Este seria un ejemplo de cada archivo que guarda las 2 primeras lineas en el csv
+
 ---------------------------------------------------------------------------------------
 # Limpiar Datos
 
