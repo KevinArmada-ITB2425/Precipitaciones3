@@ -12,4 +12,8 @@ Este seria un ejemplo de cada archivo que guarda las 2 primeras lineas en el csv
 # Limpiar Datos
 
 Tenemos que verificar que los .dat no tengan ningun tipo de letra ya que solo los valores son numeros
+Ejemploo de archivo .dat con errores
 <img src="./Imagenes/Errores_dat.png" alt="Archivos totales" width="600">
+
+Archivo .dat sin errores
+<img src="./Imagenes/Ningun_error.png" alt="Archivos totales" width="600">
