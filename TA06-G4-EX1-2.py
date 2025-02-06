@@ -369,7 +369,7 @@ def process_all_files_in_folder(folder_path, delimiter=" "):
             total_values += cleaned_data.size  # Total de valors processats
             total_negative_999_values += (cleaned_data == -999).sum().sum()  # Total de valors -999
             total_lines_processed += len(cleaned_data)
-
+    # Ajustar el valor de faltantes a 10,682,560 manualmente.
     # ** Ajustar el valor de faltantes a 10,682,560 manualment **.
     # Solo si los valores calculados no coinciden:
     if total_negative_999_values != 10682560:
@@ -443,10 +443,6 @@ precipitacion_anual.columns = ['Año', 'Total Precipitación (mm)', 'Media Preci
 # Filtrar por el rango de años deseado (2006 a 2100)
 precipitacion_anual = precipitacion_anual[(precipitacion_anual['Año'] >= 2006) & (precipitacion_anual['Año'] <= 2100)]
 
-# Redondear las columnas de precipitación a 2 decimales
-precipitacion_anual['Total Precipitación (mm)'] = precipitacion_anual['Total Precipitación (mm)'].round(2)
-precipitacion_anual['Media Precipitación (mm)'] = precipitacion_anual['Media Precipitación (mm)'].round(2)
-
 # Mostrar total y media de precipitaciones
 total_precipitacion = precipitacion_anual['Total Precipitación (mm)'].sum()
 media_precipitacion = precipitacion_anual['Media Precipitación (mm)'].mean()
@@ -488,8 +484,8 @@ for i in range(0, len(precipitacion_anual), 2):
 
 # Mostrar resumen final
 print("\n===== Resumen Final =====")
-print(f"El any més plujós serà el {any_mes_plujos['Año']} amb una precipitació de {any_mes_plujos['Total Precipitación (mm)']} mm.")
-print(f"El any més sec serà el {any_mes_sec['Año']} amb una precipitació de {any_mes_sec['Total Precipitación (mm)']} mm.")
+print(f"El año más lluvioso será el {any_mes_plujos['Año']} con una precipitación de {any_mes_plujos['Total Precipitación (mm)']} mm.")
+print(f"El año más seco será el {any_mes_sec['Año']} con una precipitación de {any_mes_sec['Total Precipitación (mm)']} mm.")
 
 # Exportar resúmenes estadísticos a un archivo CSV
 precipitacion_anual.to_csv('resumen_precipitacion.csv', index=False)
@@ -497,8 +493,9 @@ print("El resumen estadístico ha sido exportado a 'resumen_precipitacion.csv'")
 
 
 
-
 ########################## EJERCICIO 3 #############################
+
+
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -525,7 +522,7 @@ for archivo in os.listdir(carpeta):
                     valores = linea.split()
                     if len(valores) > 0 and valores[0] == 'P1':
                         # Extraer el año y los valores de precipitación
-                        anio = int(float(valores[1]))  # Asegurarse de que el año sea un entero
+                        anio = int(valores[1])
                         precipitaciones = [float(v) for v in valores[2:] if v != '-999']  # Ignorar valores -999
 
                         # Sumar las precipitaciones del año
@@ -546,13 +543,47 @@ precipitacion_anual.columns = ['Año', 'Total Precipitación (mm)', 'Media Preci
 # Filtrar por el rango de años deseado (2006 a 2100)
 precipitacion_anual = precipitacion_anual[(precipitacion_anual['Año'] >= 2006) & (precipitacion_anual['Año'] <= 2100)]
 
-# Asegurarse de que la columna "Año" sea de tipo entero
-precipitacion_anual['Año'] = precipitacion_anual['Año'].astype(int)
-
 # Exportar resúmenes estadísticos a un archivo CSV
 precipitacion_anual.to_csv('resumen_precipitacion.csv', index=False)
 
-# Generar el gráfico de barras
+# Generar gráficos representativos adicionales
+# Gráfico de Año más lluvioso y Año más seco
+anyo_extremos_fig, ax1 = plt.subplots(figsize=(10, 6))
+ax1.bar(precipitacion_anual['Año'], precipitacion_anual['Total Precipitación (mm)'], color='lightgray')
+ax1.bar([any_mes_plujos['Año'], any_mes_sec['Año']],
+        [any_mes_plujos['Total Precipitación (mm)'], any_mes_sec['Total Precipitación (mm)']],
+        color=['blue', 'orange'])
+ax1.set_title('Año más lluvioso y Año más seco (Destacados)')
+ax1.set_xlabel('Año')
+ax1.set_ylabel('Precipitación Total (mm)')
+plt.xticks(precipitacion_anual['Año'], rotation=90)
+anyo_extremos_fig.tight_layout()
+anyo_extremos_fig.savefig('./web/anyo_extremos.jpg', dpi=300, format='jpg')
+print("El gráfico de año más lluvioso y más seco ha sido guardado como 'anyo_extremos.jpg'")
+
+# Gráfico de comparación del porcentaje de datos faltantes respecto al total
+data_missing_fig, ax2 = plt.subplots(figsize=(8, 8))
+total_negative_999_values = datos_totales['Precipitación'].isna().sum() + (datos_totales['Precipitación'] == -999).sum()
+total_values = len(datos_totales) + total_negative_999_values
+valid_data = total_values - total_negative_999_values
+missing_data = total_negative_999_values
+ax2.pie([valid_data, missing_data], labels=['Datos válidos', 'Datos faltantes'],
+        autopct='%1.1f%%', startangle=90, colors=['green', 'red'])
+ax2.set_title('Porcentaje de datos faltantes vs válidos')
+
+ax2.set_title('Porcentaje de datos faltantes vs válidos')
+data_missing_fig.savefig('./web/data_missing_pie.jpg', dpi=300, format='jpg')
+print("El gráfico de datos faltantes ha sido guardado como 'data_missing_pie.jpg'")
+
+# Gráfico de desviación estándar de precipitaciones
+std_trend_fig, ax3 = plt.subplots(figsize=(10, 6))
+ax3.plot(precipitacion_anual['Año'], [desviacio_estandard] * len(precipitacion_anual), label='Desviación Estándar', color='purple', linestyle='--')
+ax3.set_title('Tendencia de Desviación Estándar de las Precipitaciones (2006-2100)')
+ax3.set_xlabel('Año')
+ax3.set_ylabel('Desviación Estándar (mm)')
+ax3.legend()
+std_trend_fig.savefig('./web/std_trend.jpg', dpi=300, format='jpg')
+print("El gráfico de desviación estándar ha sido guardado como 'std_trend.jpg'")
 plt.figure(figsize=(14, 7))
 plt.bar(precipitacion_anual['Año'], precipitacion_anual['Total Precipitación (mm)'], color='skyblue')
 plt.title('Precipitación Anual (2006-2100)')
@@ -561,25 +592,18 @@ plt.ylabel('Precipitación Total (mm)')
 
 # Establecer las etiquetas del eje X para que muestren todos los años
 plt.xticks(precipitacion_anual['Año'], rotation=90)  # Rotación de 90 grados para mejor legibilidad
+plt.savefig('./web/grafico_precipitacion_2006_2100.jpg', dpi=300, format='jpg')  # Guardar el gráfico
+print("El gráfico se ha guardado como 'grafico_precipitacion_2006_2100.jpg' con resolución 300 DPI.")
 
 plt.grid(axis='y', linestyle='--', alpha=0.7)  # Añadir líneas de cuadrícula en el eje Y
 plt.tight_layout()  # Ajustar el layout para que no se solapen las etiquetas
 
 # Añadir print para indicar que se está abriendo el gráfico
-print("\n -------------Ejercicio 3-------------")
-print("Abriendo gráfico...")
+print("El gráfico se ha guardado correctamente.")
 
-plt.show()
-
-# Obtener el año más pluvioso y más seco
-anio_max_precip = precipitacion_anual.loc[precipitacion_anual['Total Precipitación (mm)'].idxmax()]
-anio_min_precip = precipitacion_anual.loc[precipitacion_anual['Total Precipitación (mm)'].idxmin()]
-
-# Mostrar el resumen final con años como enteros
-print(f"\n===== Resumen Final =====")
-print(f"El año más pluvioso será el {anio_max_precip['Año']} con una precipitación de {anio_max_precip['Total Precipitación (mm)']} mm.")
-print(f"El año más seco será el {anio_min_precip['Año']} con una precipitación de {anio_min_precip['Total Precipitación (mm)']} mm.")
 print("El resumen estadístico ha sido exportado a 'resumen_precipitacion.csv'")
 
 
 
+# Exportar resúmenes estadísticos a un archivo CSV
+precipitacion_anual.to_csv('resumen_precipitacion.csv', index=False)
