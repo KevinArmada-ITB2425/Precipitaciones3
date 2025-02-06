@@ -3,7 +3,7 @@
 # Directorio
 import os
 
-directory = './dat'
+directory = './dat.proves'
 
 # verificar el formato del archivo
 def check_file_format(filepath):
@@ -277,7 +277,7 @@ def create_error_csv(files_with_errors):
 
 # Exemple d'ús
 if __name__ == "__main__":
-    folder_path = "./dat"  # Ruta de la carpeta
+    folder_path = "./dat.proves"  # Ruta de la carpeta
     delimiter = " "  # Defineix el delimitador adequat
     process_all_files_in_folder(folder_path, delimiter)
 
@@ -392,7 +392,7 @@ def process_all_files_in_folder(folder_path, delimiter=" "):
 
 # Exemple d'ús
 if __name__ == "__main__":
-    folder_path = "./dat"  # Ruta de la carpeta
+    folder_path = "./dat.proves"  # Ruta de la carpeta
     delimiter = " "  # Defineix el delimitador adequat
     process_all_files_in_folder(folder_path, delimiter)
 
