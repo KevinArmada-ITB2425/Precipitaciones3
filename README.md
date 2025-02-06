@@ -36,6 +36,12 @@ Despues de calcular todos los datos tenemos que calcular precipitacion total y m
 
 # Generar los datos
 
-AHora tenemos que generar los datos como resumen de estadisticas por pantalla y los graficos estadisticos
+Ahora tenemos que generar los datos como resumen de estadisticas por pantalla y los graficos estadisticos
 
 <img src="./Imagenes/Estadisticas_por_terminal.png" alt="Archivos totales" width="600">
+
+
+Y aqui podemos ver en modo grafico
+
+
+<img src="./Imagenes/EstadisticasTerminal.png" alt="Archivos totales" width="600">
