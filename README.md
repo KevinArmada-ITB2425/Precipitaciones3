@@ -31,3 +31,11 @@ Ahora tenemos que procesar todos los .dat para sacar los siguientes valores: Val
 Despues de calcular todos los datos tenemos que calcular precipitacion total y media por año, variacion anual de las precipitaciones, los años mas lluviosos y mas secos
 
 <img src="./Imagenes/Estadisticas_años.png" alt="Archivos totales" width="600">
+
+---------------------------------------------------------------------------------------
+
+# Generar los datos
+
+AHora tenemos que generar los datos como resumen de estadisticas por pantalla y los graficos estadisticos
+
+<img src="./Imagenes/Estadisticas_por_terminal.png" alt="Archivos totales" width="600">
