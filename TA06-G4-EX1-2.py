@@ -443,6 +443,10 @@ precipitacion_anual.columns = ['Año', 'Total Precipitación (mm)', 'Media Preci
 # Filtrar por el rango de años deseado (2006 a 2100)
 precipitacion_anual = precipitacion_anual[(precipitacion_anual['Año'] >= 2006) & (precipitacion_anual['Año'] <= 2100)]
 
+# Redondear las columnas de precipitación a 2 decimales
+precipitacion_anual['Total Precipitación (mm)'] = precipitacion_anual['Total Precipitación (mm)'].round(2)
+precipitacion_anual['Media Precipitación (mm)'] = precipitacion_anual['Media Precipitación (mm)'].round(2)
+
 # Mostrar total y media de precipitaciones
 total_precipitacion = precipitacion_anual['Total Precipitación (mm)'].sum()
 media_precipitacion = precipitacion_anual['Media Precipitación (mm)'].mean()
@@ -490,6 +494,7 @@ print(f"El any més sec serà el {any_mes_sec['Año']} amb una precipitació de 
 # Exportar resúmenes estadísticos a un archivo CSV
 precipitacion_anual.to_csv('resumen_precipitacion.csv', index=False)
 print("El resumen estadístico ha sido exportado a 'resumen_precipitacion.csv'")
+
 
 
 
