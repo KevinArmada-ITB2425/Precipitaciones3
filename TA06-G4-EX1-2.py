@@ -494,8 +494,6 @@ print("El resumen estadístico ha sido exportado a 'resumen_precipitacion.csv'")
 
 
 ########################## EJERCICIO 3 #############################
-
-
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -522,7 +520,7 @@ for archivo in os.listdir(carpeta):
                     valores = linea.split()
                     if len(valores) > 0 and valores[0] == 'P1':
                         # Extraer el año y los valores de precipitación
-                        anio = int(valores[1])
+                        anio = int(float(valores[1]))  # Asegurarse de que el año sea un entero
                         precipitaciones = [float(v) for v in valores[2:] if v != '-999']  # Ignorar valores -999
 
                         # Sumar las precipitaciones del año
@@ -542,6 +540,9 @@ precipitacion_anual.columns = ['Año', 'Total Precipitación (mm)', 'Media Preci
 
 # Filtrar por el rango de años deseado (2006 a 2100)
 precipitacion_anual = precipitacion_anual[(precipitacion_anual['Año'] >= 2006) & (precipitacion_anual['Año'] <= 2100)]
+
+# Asegurarse de que la columna "Año" sea de tipo entero
+precipitacion_anual['Año'] = precipitacion_anual['Año'].astype(int)
 
 # Exportar resúmenes estadísticos a un archivo CSV
 precipitacion_anual.to_csv('resumen_precipitacion.csv', index=False)
@@ -565,5 +566,15 @@ print("Abriendo gráfico...")
 
 plt.show()
 
+# Obtener el año más pluvioso y más seco
+anio_max_precip = precipitacion_anual.loc[precipitacion_anual['Total Precipitación (mm)'].idxmax()]
+anio_min_precip = precipitacion_anual.loc[precipitacion_anual['Total Precipitación (mm)'].idxmin()]
+
+# Mostrar el resumen final con años como enteros
+print(f"\n===== Resumen Final =====")
+print(f"El año más pluvioso será el {anio_max_precip['Año']} con una precipitación de {anio_max_precip['Total Precipitación (mm)']} mm.")
+print(f"El año más seco será el {anio_min_precip['Año']} con una precipitación de {anio_min_precip['Total Precipitación (mm)']} mm.")
 print("El resumen estadístico ha sido exportado a 'resumen_precipitacion.csv'")
-###########33
+
+
+
