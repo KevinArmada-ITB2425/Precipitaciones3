@@ -1,7 +1,7 @@
 # Precipitaciones3
 
 # Pagina Web
-<a href="./web/index.html">Ver página web</a>
+<a href="./web/web.html">Ver página web</a>
 
 ---------------------------------------------------------------------------------------
 
