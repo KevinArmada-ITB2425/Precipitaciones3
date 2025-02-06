@@ -566,4 +566,4 @@ print("Abriendo gráfico...")
 plt.show()
 
 print("El resumen estadístico ha sido exportado a 'resumen_precipitacion.csv'")
-
+###########33
